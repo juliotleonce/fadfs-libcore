@@ -12,7 +12,15 @@ find_package(xstdlib REQUIRED)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_EXTENSIONS OFF)
 
-add_library(fadfs_core SHARED library.c)
+add_library(fadfs_core SHARED
+        include/public/api.h
+        include/internal/typedef.h
+        src/api.c
+        src/inode.c
+        src/fadisk.c
+        src/bitmap.c
+        src/path.c
+        src/dir.c)
 
 target_include_directories(fadfs_core PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -23,12 +31,16 @@ target_link_libraries(fadfs_core PRIVATE xstdlib::xstdlib)
 
 include(GNUInstallDirs)
 
+install(DIRECTORY include/public
+        DESTINATION include/fadfs_core
+)
+
 install(TARGETS fadfs_core
         EXPORT fadfs_core_targets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        INCLUDES DESTINATION include
 )
 
 install(EXPORT fadfs_core_targets
