@@ -20,7 +20,15 @@ add_library(fadfs_core SHARED
         src/fadisk.c
         src/bitmap.c
         src/path.c
-        src/dir.c)
+        src/dir.c
+        include/internal/fadisk.h
+        src/state.c
+        include/internal/state.h
+        include/internal/constant.h
+        include/internal/superblock.h
+        src/superblock.c
+        include/public/error.h
+)
 
 target_include_directories(fadfs_core PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

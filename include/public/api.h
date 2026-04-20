@@ -26,28 +26,23 @@
 
 typedef struct {
     uint32_t ino;
-} fadfs_ino_t;
-
-typedef struct {
-    fadfs_ino_t ino;
-    uint8_t     type;
-    uint32_t    size;
-    uint32_t    nlinks;
-    uint32_t    blocks;
+    uint8_t type;
+    uint32_t size;
+    uint32_t blocks;
 } fadfs_stat_t;
 
 typedef struct {
-    fadfs_ino_t ino;
-    uint32_t    offset;
-    uint8_t     flags;
+    uint32_t ino;
+    uint32_t offset;
+    uint8_t flags;
 } fadfs_file_t;
 
 typedef struct {
-    fadfs_ino_t ino;
-    char        name[FADFS_NAME_MAX + 1];
+    uint32_t ino;
+    char name[FADFS_NAME_MAX + 1];
 } fadfs_dirent_t;
 
-int fadfs_mkfs(const char *path, uint32_t block_count, uint32_t block_size);
+int fadfs_mkfs(const char *path, uint64_t allocated_size);
 int fadfs_mount(const char *path);
 int fadfs_umount(void);
 
