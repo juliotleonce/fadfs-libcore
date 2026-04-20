@@ -14,11 +14,8 @@ int fadisk_open(const char *path, fadisk_t *disk) {
 
 int fadisk_close(void) {
     FADISK_OPENED_REQUIRED();
-    fadisk_t *disk = get_fadisk_state();
-
-    fclose(disk->fd);
-    disk->fd = NULL;
-    disk->fs_status = FADISK_STATE_UNMOUNTED;
+    const fadisk_t *disk = get_fadisk_state();
+    PROPAGATE_ERROR(fclose(disk->fd));
 
     return NO_ERROR;
 }
