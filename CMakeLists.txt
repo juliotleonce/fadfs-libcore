@@ -39,7 +39,9 @@ target_link_libraries(fadfs_core PRIVATE xstdlib::xstdlib)
 
 include(GNUInstallDirs)
 
-install(DIRECTORY include/public
+install(FILES
+        include/public/api.h
+        include/public/error.h
         DESTINATION include/fadfs_core
 )
 
