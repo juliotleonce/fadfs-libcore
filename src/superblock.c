@@ -6,7 +6,7 @@
 #include "include/internal/constant.h"
 
 int load_superblock(superblock_t *sb) {
-    PROPAGATE_ERROR(fadisk_read(sb, sizeof(superblock_t), 0))
+    fadisk_read(sb, sizeof(superblock_t), 0);
     if (sb->magic != FADFS_MAGIC) return -INVALID_FILE_SYSTEM;
 
     return NO_ERROR;
