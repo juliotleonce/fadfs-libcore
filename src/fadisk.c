@@ -26,9 +26,8 @@ int fadisk_read(void *buf, const size_t n, const uint32_t offset) {
 
     fseek(disk->fd, offset, SEEK_SET);
 
-    if (fread(buf, n, 1, disk->fd) != n) {
+    if (fread(buf, n, 1, disk->fd) != n)
         return -FADISK_READ_ERROR;
-    }
 
     fflush(disk->fd);
     return NO_ERROR;
@@ -40,9 +39,8 @@ int fadisk_write(const void *buf, const size_t n, const uint32_t offset) {
 
     fseek(disk->fd, offset, SEEK_SET);
 
-    if (fwrite(buf, n, 1, disk->fd) != n) {
+    if (fwrite(buf, n, 1, disk->fd) != n)
         return -FADISK_WRITE_ERROR;
-    }
 
     fflush(disk->fd);
     return NO_ERROR;
