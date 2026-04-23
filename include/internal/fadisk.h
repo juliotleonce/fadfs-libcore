@@ -15,8 +15,8 @@ int fadisk_open(const char *path, fadisk_t *disk);
 
 int fadisk_close(void);
 
-int fadisk_read(void *buf, size_t n, uint32_t offset);
+size_t fadisk_read(void *buf, size_t n, int64_t offset);
 
-int fadisk_write(const void *buf, size_t n, uint32_t offset);
+size_t fadisk_write(const void *buf, size_t n, int64_t offset);
 
 #endif

@@ -13,14 +13,14 @@ int load_superblock(superblock_t *sb) {
 }
 
 int save_superblock(const superblock_t *sb) {
-    PROPAGATE_ERROR(fadisk_write(sb, sizeof(superblock_t), 0))
+    fadisk_write(sb, sizeof(superblock_t), 0);
     return NO_ERROR;
 }
 
 superblock_t create_superblock(const uint64_t allocated_size) {
     const uint32_t block_count = allocated_size >> FADFS_BLOCK_SHIFT;
-    const uint32_t inode_count = allocated_size / FADFS_FILE_AVG_SIZE;
-    const uint32_t inode_table_size = inode_count * FADFS_INODE_SIZE;
+    const uint32_t inode_max_count = allocated_size / FADFS_FILE_AVG_SIZE;
+    const uint32_t inode_table_size = inode_max_count * FADFS_INODE_SIZE;
     const uint32_t bitmap_size = (block_count + 7) >> 3;
     const uint32_t inode_bitmap_offset = inode_table_size + SUPER_BLOCK_SIZE;
     const uint32_t data_block_offset = inode_table_size + bitmap_size + SUPER_BLOCK_SIZE;
@@ -31,7 +31,8 @@ superblock_t create_superblock(const uint64_t allocated_size) {
         .block_shift = FADFS_BLOCK_SHIFT,
         .block_count = block_count,
         .free_block_count = block_count,
-        .inode_count = inode_count,
+        .allocated_inode_count = 0,
+        .inode_max_count = inode_max_count,
         .inode_table_offset = SUPER_BLOCK_SIZE,
         .inode_size = FADFS_INODE_SIZE,
         .bitmap_size = bitmap_size,

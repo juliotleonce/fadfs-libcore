@@ -20,30 +20,24 @@ int fadisk_close(void) {
     return NO_ERROR;
 }
 
-int fadisk_read(void *buf, const size_t n, const uint32_t offset) {
-    FADISK_OPENED_REQUIRED();
+size_t fadisk_read(void *buf, const size_t n, const int64_t offset) {
     const fadisk_t *disk = get_fadisk_state();
 
     fseek(disk->fd, offset, SEEK_SET);
-
-    if (fread(buf, n, 1, disk->fd) != n)
-        return -FADISK_READ_ERROR;
-
+    const size_t read_byte = fread(buf, n, 1, disk->fd);
     fflush(disk->fd);
-    return NO_ERROR;
+
+    return read_byte;
 }
 
-int fadisk_write(const void *buf, const size_t n, const uint32_t offset) {
-    FADISK_MOUNTED_REQUIRED();
+size_t fadisk_write(const void *buf, const size_t n, const int64_t offset) {
     const fadisk_t *disk = get_fadisk_state();
 
     fseek(disk->fd, offset, SEEK_SET);
-
-    if (fwrite(buf, n, 1, disk->fd) != n)
-        return -FADISK_WRITE_ERROR;
-
+    const size_t write_byte = fwrite(buf, n, 1, disk->fd);
     fflush(disk->fd);
-    return NO_ERROR;
+
+    return write_byte;
 }
 
 
