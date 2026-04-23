@@ -18,7 +18,6 @@ add_library(fadfs_core SHARED
         src/api.c
         src/inode.c
         src/fadisk.c
-        src/bitmap.c
         src/path.c
         src/dir.c
         include/internal/fadisk.h
@@ -28,6 +27,11 @@ add_library(fadfs_core SHARED
         include/internal/superblock.h
         src/superblock.c
         include/public/error.h
+        include/internal/inode.h
+        src/blocs.c
+        include/internal/blocs.h
+        src/file.c
+        include/internal/file.h
 )
 
 target_include_directories(fadfs_core PUBLIC
