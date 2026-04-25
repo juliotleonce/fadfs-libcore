@@ -12,16 +12,19 @@ typedef struct range_t {
 static bool is_ranges_not_disjoint(range_t range1, range_t range2);
 static range_t ranges_intersection(range_t range1, range_t range2);
 static range_t get_indirect_block_range();
+
 static int get_direct_blocks_from_range(
     inode_t *inode,
     range_t range,
     uint32_t blocks[]
 );
+
 static int get_indirect_blocks_from_range(
     inode_t *inode,
     range_t range,
     uint32_t blocks[]
 );
+
 static int get_inode_blocks_from_range(
     inode_t *inode,
     range_t range,
@@ -70,8 +73,9 @@ int read_file_data(inode_t *inode, uint32_t file_offset, buff_data_t *data) {
 
 
 /**
- * PRIVATE FUNCTION IMPLEMENTATION GOES HERE
+ * PRIVATE FUNCTION IMPLEMENTATION GOES BELOW
  */
+
 int get_inode_blocks_from_range(
     inode_t *inode,
     const range_t range,
