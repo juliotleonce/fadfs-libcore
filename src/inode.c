@@ -40,7 +40,7 @@ int read_inode(const ino_t ino, inode_t *inode) {
 
 int64_t get_inode_offset(const ino_t ino) {
     const superblock_t *sb = get_superblock_state();
-    return sb->inode_table_offset + ino * FADFS_INODE_SIZE;
+    return sb->inode_table_offset + (ino - 1) * FADFS_INODE_SIZE;
 }
 
 
