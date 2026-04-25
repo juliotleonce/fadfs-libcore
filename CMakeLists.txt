@@ -29,7 +29,7 @@ add_library(fadfs_core SHARED
         include/public/error.h
         include/internal/inode.h
         src/blocs.c
-        include/internal/blocs.h
+        include/internal/blocks.h
         src/file.c
         include/internal/file.h
 )
