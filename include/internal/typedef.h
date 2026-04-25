@@ -24,9 +24,6 @@ typedef struct __attribute__((packed)) inode_t {
     uint32_t indirect;
 } inode_t;
 
-typedef struct block_t {
-
-} block_t;
 
 typedef struct __attribute__((packed)) superblock_t {
     uint32_t magic;
@@ -65,5 +62,10 @@ typedef struct buff_data_t {
     uint32_t size;
     void *data;
 } buff_data_t;
+
+typedef struct range_t {
+    uint32_t start;
+    uint32_t end;
+} range_t;
 
 #endif //FADFS_CORE_TYPE_DEF_H

@@ -4,11 +4,6 @@
 #include "include/internal/constant.h"
 #include "include/internal/blocks.h"
 
-typedef struct range_t {
-    uint32_t start;
-    uint32_t end;
-} range_t;
-
 static bool is_ranges_not_disjoint(range_t range1, range_t range2);
 static range_t ranges_intersection(range_t range1, range_t range2);
 static range_t get_indirect_block_range();
