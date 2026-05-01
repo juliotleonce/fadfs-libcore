@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "include/internal/superblock.h"
+
 static superblock_t g_sb;
 static fadisk_t g_disk;
 
@@ -11,6 +13,10 @@ superblock_t *get_superblock_state() {
 
 void init_superblock_state(const superblock_t *sb) {
     memcpy(&g_sb, sb, sizeof(superblock_t));
+}
+
+void save_superblock_state() {
+    save_superblock(&g_sb);
 }
 
 fadisk_t *get_fadisk_state() {
