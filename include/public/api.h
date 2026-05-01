@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-#define FADFS_NAME_MAX 255
+#define FADFS_FILENAME_MAX 255
 
 #define FADFS_O_RDONLY  0x01
 #define FADFS_O_WRONLY  0x02
@@ -39,7 +39,7 @@ typedef struct {
 
 typedef struct {
     uint32_t ino;
-    char name[FADFS_NAME_MAX + 1];
+    char name[FADFS_FILENAME_MAX + 1];
 } fadfs_dirent_t;
 
 int fadfs_mkfs(const char *path, uint64_t allocated_size);

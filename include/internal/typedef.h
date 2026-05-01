@@ -14,7 +14,7 @@ typedef unsigned char byte;
 typedef FILE *file_t;
 typedef __uint32_t uint32_t;
 typedef __ssize_t ssize_t;
-typedef uint32_t ino_t;
+typedef uint32_t ino32_t;
 
 typedef struct __attribute__((packed)) inode_t {
     int8_t used;
@@ -23,7 +23,6 @@ typedef struct __attribute__((packed)) inode_t {
     uint32_t direct[FADFS_MAX_DIRECT_BLOCKS];
     uint32_t indirect;
 } inode_t;
-
 
 typedef struct __attribute__((packed)) superblock_t {
     uint32_t magic;
@@ -39,6 +38,7 @@ typedef struct __attribute__((packed)) superblock_t {
     uint32_t bitmap_size;
     uint32_t inode_bitmap_offset;
     uint32_t data_block_offset;
+    ino32_t root_ino;
 } superblock_t;
 
 enum fadisk_fs_status {
@@ -68,4 +68,9 @@ typedef struct range_t {
     uint32_t end;
 } range_t;
 
-#endif //FADFS_CORE_TYPE_DEF_H
+typedef struct __attribute__((packed)) dirent_t {
+    uint32_t ino;
+    char name[FADFS_FILENAME_MAX + 1];
+} dirent_t;
+
+#endif

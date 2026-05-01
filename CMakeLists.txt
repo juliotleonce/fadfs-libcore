@@ -28,10 +28,11 @@ add_library(fadfs_core SHARED
         src/superblock.c
         include/public/error.h
         include/internal/inode.h
-        src/blocs.c
+        src/blocks.c
         include/internal/blocks.h
-        src/file.c
-        include/internal/file.h
+        src/inode_data.c
+        include/internal/inode_data.h
+        include/internal/dir.h
 )
 
 target_include_directories(fadfs_core PUBLIC
