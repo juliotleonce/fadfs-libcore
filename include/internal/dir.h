@@ -14,6 +14,6 @@ int32_t dir_get_entry_index(inode_t *dir_inode, const char *filename);
 
 int dir_remove(inode_t *dir_inode, const char *filename);
 
-ino32_t dir_lookup(inode_t *dir_inode, const char *filename);
+int dir_lookup(inode_t *dir_inode, dirent_t *found_dirent, const char *filename);
 
 #endif

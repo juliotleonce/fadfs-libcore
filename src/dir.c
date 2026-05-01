@@ -92,14 +92,13 @@ int dir_remove(inode_t *dir_inode, const char *filename) {
     return NO_ERROR;
 }
 
-ino32_t dir_lookup(inode_t *dir_inode, const char *filename) {
+int dir_lookup(inode_t *dir_inode, dirent_t *found_dirent, const char *filename) {
     const int32_t entry_index = dir_get_entry_index(dir_inode, filename);
-    if (entry_index == -1) return 0;
+    if (entry_index == -1) return FILE_NOT_FOUND;
 
-    dirent_t dirent;
-    dir_get_entry_from_index(dir_inode, entry_index, &dirent);
+    dir_get_entry_from_index(dir_inode, entry_index, found_dirent);
 
-    return dirent.ino;
+    return NO_ERROR;
 }
 
 
