@@ -10,6 +10,7 @@
 #define UNMOUNTED_DISK 0xA3
 #define FADISK_READ_ERROR 0xA4
 #define FADISK_WRITE_ERROR 0xA5
+#define FILE_NOT_FOUND 0xA6
 #define NO_ERROR 0x00
 
 
