@@ -1,4 +1,4 @@
-#include "include/internal/file.h"
+#include "include/internal/inode_data.h"
 #include "include/internal/state.h"
 #include "include/public/error.h"
 #include "include/internal/constant.h"
@@ -26,7 +26,11 @@ static int get_inode_blocks_from_range(
     uint32_t blocks[]
 );
 
-int write_file_data(inode_t *inode, const uint32_t file_offset, buff_data_t *data) {
+static int free_inode_blocks_from_range(inode_t *inode, range_t range);
+static int free_direct_blocks_from_range(inode_t *inode, range_t range);
+static int free_indirect_blocks_from_range(inode_t *inode, range_t range);
+
+int write_inode_data(inode_t *inode, const uint32_t file_offset, buff_data_t *data) {
     const superblock_t *sb = get_superblock_state();
     uint32_t block_offset = file_offset % sb->block_size;
     const range_t block_range_needed = {
@@ -40,13 +44,14 @@ int write_file_data(inode_t *inode, const uint32_t file_offset, buff_data_t *dat
 
     for (uint32_t i = 0; i < block_count; i++) {
         if (i != 0) block_offset = 0;
-        inode->size += write_data_on_block(blocks[i], block_offset, data);
+        write_data_on_block(blocks[i], block_offset, data);
     }
 
+    if (inode->size < file_offset + data->size) inode->size = file_offset + data->size;
     return NO_ERROR;
 }
 
-int read_file_data(inode_t *inode, uint32_t file_offset, buff_data_t *data) {
+int read_inode_data(inode_t *inode, const uint32_t file_offset, buff_data_t *data) {
     const superblock_t *sb = get_superblock_state();
     uint32_t block_offset = file_offset % sb->block_size;
     const range_t block_range_needed = {
@@ -62,6 +67,19 @@ int read_file_data(inode_t *inode, uint32_t file_offset, buff_data_t *data) {
         if (i != 0) block_offset = 0;
         read_data_on_block(blocks[i], block_offset, data);
     }
+
+    return NO_ERROR;
+}
+
+int truncate_inode_data(inode_t *inode, const uint32_t new_size) {
+    const superblock_t *sb = get_superblock_state();
+    const range_t range_to_free = {
+        .start = new_size / sb->block_size + 1,
+        .end = inode->size / sb->block_size
+    };
+
+    free_inode_blocks_from_range(inode, range_to_free);
+    inode->size = new_size;
 
     return NO_ERROR;
 }
@@ -154,6 +172,75 @@ int get_indirect_blocks_from_range(inode_t *inode, const range_t range, uint32_t
             .data_seek = 0
         }
     );
+
+    return NO_ERROR;
+}
+
+int free_inode_blocks_from_range(inode_t *inode, const range_t range) {
+    const range_t direct_block_range = {0,  FADFS_MAX_DIRECT_BLOCKS };
+    const range_t indirect_block_range = get_indirect_block_range();
+
+    if (is_ranges_not_disjoint(range, direct_block_range)) {
+        const range_t intersection = ranges_intersection(range, direct_block_range);
+        free_direct_blocks_from_range(inode, intersection);
+    }
+    if (is_ranges_not_disjoint(range, indirect_block_range)) {
+        const range_t intersection = ranges_intersection(range, indirect_block_range);
+        free_indirect_blocks_from_range(inode, intersection);
+    }
+
+    return NO_ERROR;
+}
+
+int free_direct_blocks_from_range(inode_t *inode, const range_t range) {
+    const uint32_t start = range.start;
+    const uint32_t end = range.end;
+    for (uint32_t i = start; i < end; i++) {
+        if (inode->direct[i] != 0) free_block(inode->direct[i]);
+        inode->direct[i] = 0;
+    }
+
+    return NO_ERROR;
+}
+
+int free_indirect_blocks_from_range(inode_t *inode, const range_t range) {
+    const uint32_t start = range.start - FADFS_MAX_DIRECT_BLOCKS;
+    const uint32_t end = range.end - FADFS_MAX_DIRECT_BLOCKS;
+    const uint32_t block_count = end - start;
+    const uint32_t block_offset = (start - FADFS_MAX_DIRECT_BLOCKS) * sizeof(uint32_t);
+    uint32_t blocks[block_count];
+
+    read_data_on_block(
+        inode->indirect,
+        block_offset,
+        &(buff_data_t) {
+            .data = blocks,
+            .size = block_count * sizeof(uint32_t),
+            .data_seek = 0
+        }
+    );
+
+    for (uint32_t i = 0; i < block_count; i++) {
+        if (blocks[i] != 0) {
+            free_block(blocks[i]);
+            blocks[i] = 0;
+        }
+    }
+
+    write_data_on_block(
+        inode->indirect,
+        block_offset,
+        &(buff_data_t) {
+            .data = blocks,
+            .size = block_count * sizeof(uint32_t),
+            .data_seek = 0
+        }
+   );
+
+    if (range.start == FADFS_MAX_DIRECT_BLOCKS) {
+        free_block(inode->indirect);
+        inode->indirect = 0;
+    }
 
     return NO_ERROR;
 }
