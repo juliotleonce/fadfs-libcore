@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 #include "constant.h"
+#include "include/public/api.h"
 
 typedef unsigned char byte;
 typedef FILE *file_t;
@@ -72,5 +73,11 @@ typedef struct __attribute__((packed)) dirent_t {
     uint32_t ino;
     char name[FADFS_FILENAME_MAX + 1];
 } dirent_t;
+
+typedef struct path_t {
+    char **tokens;
+    size_t token_capacity;
+    size_t token_count;
+} path_t;
 
 #endif

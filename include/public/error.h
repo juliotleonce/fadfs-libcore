@@ -11,11 +11,24 @@
 #define FADISK_READ_ERROR 0xA4
 #define FADISK_WRITE_ERROR 0xA5
 #define FILE_NOT_FOUND 0xA6
+#define INVALID_PATH 0xA7
 #define NO_ERROR 0x00
 
 
 #define PROPAGATE_ERROR(err) \
-    if(err != NO_ERROR) return err;
+    do  { \
+        int resp = err; \
+        if(resp != NO_ERROR) return resp; \
+    } while(0);
+
+#define HANDLE_THEN_PROPAGATE_ERROR(err, action) \
+    do  { \
+        int resp = err; \
+        if(resp != NO_ERROR) { \
+            action; \
+            return resp; \
+         } \
+    } while(0);
 
 #define BIND_ERROR(err, action) \
     do { if(err != NO_ERROR) action; } while (0)

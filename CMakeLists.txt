@@ -33,6 +33,7 @@ add_library(fadfs_core SHARED
         src/inode_data.c
         include/internal/inode_data.h
         include/internal/dir.h
+        include/internal/path.h
 )
 
 target_include_directories(fadfs_core PUBLIC
