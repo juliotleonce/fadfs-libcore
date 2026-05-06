@@ -1,5 +1,5 @@
-#ifndef FADFS_CORE_DATA_BLOCS_H
-#define FADFS_CORE_DATA_BLOCS_H
+#ifndef FADFS_CORE_BLOCKS_H
+#define FADFS_CORE_BLOCKS_H
 #include "typedef.h"
 
 uint32_t alloc_block();
@@ -10,4 +10,4 @@ size_t write_data_on_block(uint32_t bloc, uint32_t bloc_offset, buff_data_t *buf
 
 size_t read_data_on_block(uint32_t bloc, uint32_t bloc_offset, buff_data_t *buff_data);
 
-#endif //FADFS_CORE_DATA_BLOCS_H
+#endif

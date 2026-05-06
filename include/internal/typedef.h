@@ -26,7 +26,7 @@ typedef struct __attribute__((packed)) inode_t {
 } inode_t;
 
 typedef struct __attribute__((packed)) superblock_t {
-    uint32_t magic;
+    char magic[4];
     uint32_t block_size;
     uint32_t block_shift;
     uint32_t block_count;

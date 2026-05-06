@@ -1,5 +1,7 @@
 #include "include/internal/superblock.h"
 
+#include <string.h>
+
 #include "include/internal/fadisk.h"
 #include "include/internal/state.h"
 #include "include/public/error.h"
@@ -7,7 +9,7 @@
 
 int load_superblock(superblock_t *sb) {
     fadisk_read(sb, sizeof(superblock_t), 0);
-    if (sb->magic != FADFS_MAGIC) return -INVALID_FILE_SYSTEM;
+    if (strcmp(sb->magic, FADFS_MAGIC) != 0) return -INVALID_FILE_SYSTEM;
 
     return NO_ERROR;
 }

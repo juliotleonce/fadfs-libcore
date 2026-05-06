@@ -4,7 +4,10 @@
 
 
 int fadisk_open(const char *path, fadisk_t *disk) {
-    disk->fd = fopen(path, "a+");
+    FILE *temp_fd = fopen(path, "ab");
+    if (temp_fd != NULL) fclose(temp_fd);
+
+    disk->fd = fopen(path, "rb+");
     if (disk->fd == NULL) return -CANT_OPEN_FILE;
     disk->fs_status = FADISK_STATE_MOUNTED;
     disk->is_fd_opened = true;

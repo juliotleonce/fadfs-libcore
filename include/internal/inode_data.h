@@ -1,5 +1,5 @@
-#ifndef FADFS_CORE_FILE_H
-#define FADFS_CORE_FILE_H
+#ifndef FADFS_CORE_INODE_DATA_H
+#define FADFS_CORE_INODE_DATA_H
 
 #include "typedef.h"
 

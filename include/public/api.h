@@ -38,6 +38,23 @@ typedef struct {
 } fadfs_file_t;
 
 typedef struct {
+    char magic[4];
+    uint32_t block_size;
+    uint32_t block_shift;
+    uint32_t block_count;
+    uint32_t allocated_inode_count;
+    uint32_t inode_max_count;
+    uint32_t inode_table_offset;
+    uint32_t free_block_count;
+    uint32_t inode_size;
+    uint32_t inode_table_size;
+    uint32_t bitmap_size;
+    uint32_t inode_bitmap_offset;
+    uint32_t data_block_offset;
+    uint32_t root_ino;
+} fadfs_superblock_t;
+
+typedef struct __attribute__((packed)) {
     uint32_t ino;
     char name[FADFS_FILENAME_MAX + 1];
 } fadfs_dirent_t;
@@ -45,6 +62,7 @@ typedef struct {
 int fadfs_mkfs(const char *path, uint64_t allocated_size);
 int fadfs_mount(const char *path);
 int fadfs_umount(void);
+int fadfs_read_superblock(fadfs_superblock_t *sb);
 
 int fadfs_open(const char *path, uint8_t flags, fadfs_file_t *fh);
 int fadfs_close(fadfs_file_t *fh);

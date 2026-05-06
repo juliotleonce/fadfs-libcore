@@ -12,6 +12,8 @@
 #define FADISK_WRITE_ERROR 0xA5
 #define FILE_NOT_FOUND 0xA6
 #define INVALID_PATH 0xA7
+#define NOT_A_DIRECTORY 0xA8
+#define END_OF_FILE 0xA9
 #define NO_ERROR 0x00
 
 
@@ -30,10 +32,30 @@
          } \
     } while(0);
 
-#define BIND_ERROR(err, action) \
-    do { if(err != NO_ERROR) action; } while (0)
+#define BIND_ERROR(func, action) \
+    do {\
+        int resp = func; \
+        if(err_var != NO_ERROR) { \
+            action; \
+        } \
+    } while(0)
 
 #define EXIT_ON_ERROR(err) \
-    if(err != NO_ERROR) exit(err);
+    do  { \
+        int resp = err; \
+        if(resp != NO_ERROR) { \
+            printf("Error: %X | %d\n", -resp, -resp); \
+            exit(resp); \
+        } \
+    } while(0);
 
-#endif //FADFS_CORE_ERROR_H
+#define PRINT_IF_ERROR(func, message) \
+    do  { \
+        int resp = func; \
+        if(resp != NO_ERROR) { \
+            printf("Error: %X | %d\n", -resp, -resp); \
+            printf(message); \
+            return resp; \
+        } \
+    } while (0)
+#endif

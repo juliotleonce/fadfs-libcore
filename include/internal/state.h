@@ -10,7 +10,7 @@ superblock_t *get_superblock_state();
 
 void init_superblock_state(const superblock_t *sb);
 
-void save_superblock_state();
+int save_superblock_state();
 
 fadisk_t *get_fadisk_state();
 

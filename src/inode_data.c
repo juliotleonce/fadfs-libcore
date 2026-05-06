@@ -1,4 +1,7 @@
 #include "include/internal/inode_data.h"
+
+#include <stdlib.h>
+
 #include "include/internal/state.h"
 #include "include/public/error.h"
 #include "include/internal/constant.h"
@@ -35,7 +38,7 @@ int write_inode_data(inode_t *inode, const uint32_t file_offset, buff_data_t *da
     uint32_t block_offset = file_offset % sb->block_size;
     const range_t block_range_needed = {
         .start = file_offset / sb->block_size,
-        .end = (file_offset + data->size) / sb->block_size
+        .end = 1 + (file_offset + data->size) / sb->block_size
     };
 
     const uint32_t block_count = block_range_needed.end - block_range_needed.start;
@@ -56,7 +59,7 @@ int read_inode_data(inode_t *inode, const uint32_t file_offset, buff_data_t *dat
     uint32_t block_offset = file_offset % sb->block_size;
     const range_t block_range_needed = {
         .start = file_offset / sb->block_size,
-        .end = (file_offset + data->size) / sb->block_size
+        .end = 1 + (file_offset + data->size) / sb->block_size
     };
 
     const uint32_t block_count = block_range_needed.end - block_range_needed.start;
@@ -128,6 +131,7 @@ int get_direct_blocks_from_range(
         uint32_t block = inode->direct[i];
         if (block == 0) {
             block = alloc_block();
+            if (block == 0) exit(-99);
             inode->direct[i] = block;
             blocks[i - start] = block;
             continue;

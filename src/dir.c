@@ -1,5 +1,6 @@
 #include  "include/internal/dir.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "include/internal/inode.h"
@@ -13,7 +14,8 @@ int mkrootdir() {
 
     inode_t root_inode = {
         .used = 1,
-        .type = FADFS_TYPE_DIR
+        .type = FADFS_TYPE_DIR,
+        .size = 0
     };
 
     dirent_t parent_dir = {
@@ -47,11 +49,13 @@ int dir_insert(inode_t *dir_inode, dirent_t *dirent) {
 
 int dir_get_entry_from_index(inode_t *dir_inode, const uint32_t index, dirent_t *dirent) {
     buff_data_t dirent_data = {
-        .data = dirent,
+        .data = calloc(sizeof(dirent_t), 1),
         .size = sizeof(dirent_t)
     };
 
     read_inode_data(dir_inode, index * sizeof(dirent_t), &dirent_data);
+    memcpy(dirent, dirent_data.data, sizeof(dirent_t));
+    free(dirent_data.data);
 
     return NO_ERROR;
 }
@@ -84,7 +88,7 @@ int dir_remove(inode_t *dir_inode, const char *filename) {
     const uint32_t last_entry_index = dir_size / sizeof(dirent_t) - 1;
     dirent_t last_entry;
 
-    if (entry_index == -1) return FILE_NOT_FOUND;
+    if (entry_index == -1) return -FILE_NOT_FOUND;
     dir_get_entry_from_index(dir_inode, last_entry_index, &last_entry);
     dir_set_entry_from_index(dir_inode, entry_index, &last_entry);
     truncate_inode_data(dir_inode, dir_size - sizeof(dirent_t));
@@ -94,7 +98,7 @@ int dir_remove(inode_t *dir_inode, const char *filename) {
 
 int dir_lookup(inode_t *dir_inode, dirent_t *found_dirent, const char *filename) {
     const int32_t entry_index = dir_get_entry_index(dir_inode, filename);
-    if (entry_index == -1) return FILE_NOT_FOUND;
+    if (entry_index == -1) return -FILE_NOT_FOUND;
 
     dir_get_entry_from_index(dir_inode, entry_index, found_dirent);
 

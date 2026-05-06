@@ -28,13 +28,13 @@ void free_inode(const ino32_t ino) {
 
 int write_inode(const ino32_t ino, const inode_t *inode) {
     const int64_t offset = get_inode_offset(ino);
-    PROPAGATE_ERROR(fadisk_write(inode, sizeof(inode_t), offset));
+    fadisk_write(inode, sizeof(inode_t), offset);
     return NO_ERROR;
 }
 
 int read_inode(const ino32_t ino, inode_t *inode) {
     const int64_t offset = get_inode_offset(ino);
-    PROPAGATE_ERROR(fadisk_read(inode, sizeof(inode_t), offset));
+    fadisk_read(inode, sizeof(inode_t), offset);
     return NO_ERROR;
 }
 

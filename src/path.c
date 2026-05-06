@@ -8,10 +8,10 @@
 #include "include/internal/state.h"
 #include "include/public/error.h"
 
-path_t *parse_path(char *path_str);
+path_t *parse_path(const char *path_str);
 void free_path(path_t *path);
 
-int resolve_path(char *path, dirent_t *found_dirent) {
+int resolve_path(const char *path, dirent_t *found_dirent) {
     const ino_t root_ino = get_superblock_state()->root_ino;
     path_t *path_obj = parse_path(path);
     if (path_obj == NULL) return -INVALID_PATH;
@@ -48,12 +48,14 @@ int resolve_path(char *path, dirent_t *found_dirent) {
  * PRIVATE IMPLEMENTATION GOES BELOW
  */
 
-path_t *parse_path(char *path_str) {
+path_t *parse_path(const char *path_str) {
     path_t *path = calloc(1, sizeof(path_t));
     path->token_capacity = 8;
     path->tokens = calloc(path->token_capacity, sizeof(char *));
 
-    char *token = strtok(path_str, "/");
+    char path_str_cp[strlen(path_str + 1)];
+    strcpy(path_str_cp, path_str);
+    char *token = strtok(path_str_cp, "/");
     while (token != NULL) {
         if (path->token_count == path->token_capacity) {
             path->token_capacity += 4;

@@ -13,9 +13,6 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_EXTENSIONS OFF)
 
 add_library(fadfs_core SHARED
-        include/public/api.h
-        include/internal/typedef.h
-        src/api.c
         src/inode.c
         src/fadisk.c
         src/path.c
@@ -28,12 +25,15 @@ add_library(fadfs_core SHARED
         src/superblock.c
         include/public/error.h
         include/internal/inode.h
-        src/blocks.c
         include/internal/blocks.h
-        src/inode_data.c
+        src/blocks.c
         include/internal/inode_data.h
+        src/inode_data.c
         include/internal/dir.h
         include/internal/path.h
+        include/public/api.h
+        include/internal/typedef.h
+        src/api.c
 )
 
 target_include_directories(fadfs_core PUBLIC
